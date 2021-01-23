@@ -3,7 +3,7 @@ let req = require("request");
 // cheerio -> pass html -> read -> parse-> tool
 let ch = require("cheerio");
 let obj = require("./match.js");
-let Allmatch = require("./AllMatch");
+const { processMatch } = require("./match.js");
 // io -> xlsx
 // npm 
 // to do crud
@@ -11,8 +11,11 @@ let Allmatch = require("./AllMatch");
 // expose -> async function
 console.log("Before");
 // request -> to make request to server -> and get html file
-let url = 'https://www.espncricinfo.com/series/ipl-2020-21-1210595';
-req(url, cb);
+// let url = 'https://www.espncricinfo.com/series/ipl-2020-21-1210595/match-results';
+function getScoreCardUrl(url) {
+
+    req(url, cb);
+}
 function cb(error, response, data) {
     // resoure not  found
     if (response.statusCode == 404) {
@@ -27,17 +30,17 @@ function cb(error, response, data) {
 }
 function parseHTML(data) {
     let fTool = ch.load(data);
-    // 
-    let AllMatchPageUrlElem = fTool('a[data-hover="View All Results"]');
-    let url = AllMatchPageUrlElem.attr("href");
-    let fullUrl = "https://www.espncricinfo.com" + url;
-    Allmatch.getScoreCardUrl(fullUrl);
+    let AllScorecardElem = fTool('a[data-hover="Scorecard"]');
+    for (let i = 0; i < AllScorecardElem.length; i++) {
+        let url = ch(AllScorecardElem[i]).attr("href");
+        let fullUrl = "https://www.espncricinfo.com" + url;
+        obj.pm(fullUrl);
+    }
     // console.log(AllScorecardElem.length);
 }
+
 console.log("After");
 console.log("Req send");
-
-
-// callback -> async architecture expose dev
-// Object promises-> async architecture expose dev
-// syntax sugar -> async await   
+module.exports = {
+    getScoreCardUrl: getScoreCardUrl
+}
