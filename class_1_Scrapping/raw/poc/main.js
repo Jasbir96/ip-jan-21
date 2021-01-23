@@ -2,6 +2,7 @@
 let req = require("request");
 // cheerio -> pass html -> read -> parse-> tool
 let ch = require("cheerio");
+// to do crud
 const fs = require("fs");
 // program bottleNeck 
 // expose -> async function
@@ -10,12 +11,15 @@ console.log("Before");
 req('https://www.espncricinfo.com/series/ipl-2020-21-1210595/royal-challengers-bangalore-vs-sunrisers-hyderabad-eliminator-1237178/full-scorecard', cb);
 console.log("After");
 console.log("Req send");
+
 function cb(error, response, data) {
+    // resoure not  found
     if (response.statusCode == 404) {
         console.log("Page not found");
+        // resource found
     } else if (response.statusCode == 200) {
-        // console.log(data);
-        parseHTML(data);
+        console.log(data);
+        // parseHTML(data);
     } else {
         console.log(err);
     }
@@ -44,7 +48,7 @@ function parseHTML(data) {
         let stringArr = teamName.split("INNINGS");
         teamName = stringArr[0];
         let playerRows = InningElement.find(".table.batsman tbody tr");
-        
+
         for (let j = 0; j < playerRows.length; j++) {
             let colLength = ch(playerRows[j]).find("td").length;
             if (colLength > 1) {
