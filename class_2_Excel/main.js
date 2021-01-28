@@ -11,13 +11,24 @@ function createWindow() {
     const win = new BrowserWindow({
         width: 800,
         height: 600,
+        webPreferences: { 
+            nodeIntegration: true ,
+            enableRemoteModule: true
+        } 
     })
     win.loadFile('index.ejs').then(() => {
         win.webContents.openDevTools();
         win.maximize();
     })
 }
+
+
+
 app.whenReady().then(createWindow);
+
+
+
+
 // mac 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
