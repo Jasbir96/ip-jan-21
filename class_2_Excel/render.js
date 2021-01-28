@@ -38,8 +38,6 @@ $(document).ready(function () {
             return;
         }
         // formula set
-
-
     })
     // 
 

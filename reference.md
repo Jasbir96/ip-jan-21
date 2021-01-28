@@ -11,7 +11,7 @@
 * Cheerio: http://zetcode.com/javascript/cheerio/
 * https://www.npmjs.com/package/cheerio
 ### Excel clone
-* Electron intro: https://www.youtube.com/watch?v=3yqDxhR2XxE
+* Electron theory: 
 * Getting started with Electron: https://www.electronjs.org/docs/tutorial/first-app#running-your-app
 * Css video :https://www.youtube.com/playlist?list=PL-Jc9J83PIiEeD3I4VXETPDmzJ3Z1rWb4
 * Jquery videos: https://www.youtube.com/playlist?list=PL4cUxeGkcC9hNUJ0j6ccnOAcJIPoTRpO4
