@@ -4,31 +4,141 @@ const dialog = require('electron').remote.dialog;
 const $ = require("jquery");
 const fs = require("fs");
 $(document).ready(function () {
-    // elements represtenation
+    // elements representation
     // scroll,mousedown
     window.db = [];
     init();
+    let elem;
+
+    $("#font-family").on("change", function () {
+        let fontFamily = $(this).val();
+        let address = $("#address").val();
+        let { rid, cid } = getRCidFromAddress(address);
+        db[rid][cid].fontFamily = fontFamily;
+        $(`.cell[rid=${rid}][cid=${cid}]`).css("font-family", fontFamily);
+    })
+    $("#font-size").on("change", function () {
+        let fontSize = $(this).val();
+        let address = $("#address").val();
+        let { rid, cid } = getRCidFromAddress(address);
+        db[rid][cid].fontSize = fontSize;
+        $(`.cell[rid=${rid}][cid=${cid}]`).css("font-size", fontSize + "px");
+    })
+
+    $('#underline').on("click", function () {
+        $(this).toggleClass('selected');
+        let underline = $(this).hasClass('selected');
+        let address = $("#address").val();
+
+        let { rid, cid } = getRCidFromAddress(address);
+        db[rid][cid].underline = underline;
+        $(`.cell[rid=${rid}][cid=${cid}]`).css("text-decoration", underline ? "underline" : "none");
+    })
+    $('#italic').on("click", function () {
+        $(this).toggleClass('selected');
+        let address = $("#address").val();
+        let italic = $(this).hasClass('selected');
+        let { rid, cid } = getRCidFromAddress(address);
+        db[rid][cid].italic = italic
+        $(`.cell[rid=${rid}][cid=${cid}]`).css("font-style", italic ? "italic" : "normal");
+    })
+    $('#bold').on("click", function () {
+        $(this).toggleClass('selected');
+        let address = $("#address").val();
+        let { rid, cid } = getRCidFromAddress(address);
+        let bold = $(this).hasClass('selected');
+        $(`.cell[rid=${rid}][cid=${cid}]`).css("font-weight", bold ? "bolder" : "normal");
+        db[rid][cid].bold = bold;
+    })
+    $("#bg-color").on("change", function () {
+        let bgColor = $(this).val();
+        let address = $("#address").val();
+        let { rid, cid } = getRCidFromAddress(address);
+        db[rid][cid].bgColor = bgColor;
+        $(`.cell[rid=${rid}][cid=${cid}]`).css("background-color", bgColor);
+    })
+    $("#text-color").on("change", function () {
+        let color = $(this).val();
+        let address = $("#address").val();
+        let { rid, cid } = getRCidFromAddress(address);
+        db[rid][cid].color = color;
+        $(`.cell[rid=${rid}][cid=${cid}]`).css("color", color);
+    })
+    $('[halign]').on('click', function () {
+        $('[halign]').removeClass('selected');
+        $(this).addClass('selected');
+        let address = $("#address").val();
+        let { rid, cid } = getRCidFromAddress(address);
+        let halign = $(this).attr('halign');
+        db[rid][cid].halign = halign;
+        $(`.cell[rid=${rid}][cid=${cid}]`).css("text-align", halign);
+    })
+    // **********to set excel state with the ui****************
     $(".grid .row .cell").on("click", function () {
         // console.log("cell was clicked");
         let clickedCell = this;
-
         let { rid, cid } = getRCIDFromCell(clickedCell);
         let address = getAddrFromRCid(rid, cid);
-        // console.log("")
-        // value 
-        // input -> val get value , set
-        // change  
         $("#address").val(address);
         // formula bar formula change
-        let cellObject = db[rid][cid];
-        let formula = cellObject.formula;
-        let val = cellObject.val;
+        let cell = db[rid][cid];
+        let formula = cell.formula;
         $("#formula").val(formula);
-        // $(`.cell[rid=${rid}][cid=${cid}]`).text(isEmpty ? val : "");
-        // value change`
-        console.log("cell with address", address, "was clicked");
+        $('#font-family').val(cell.fontFamily);
+        $('#font-size').val(cell.fontSize);
+        if (cell.bold) {
+            $('#bold').addClass('selected');
+        } else {
+            $('#bold').removeClass('selected');
+        }
+
+        if (cell.underline) {
+            $('#underline').addClass('selected');
+        } else {
+            $('#underline').removeClass('selected');
+        }
+
+        if (cell.italic) {
+            $('#italic').addClass('selected');
+        } else {
+            $('#italic').removeClass('selected');
+        }
+
+        $('#bg-color').val(cell.bgColor);
+        $('#text-color').val(cell.textColor);
+        $('[halign]').removeClass('selected');
+        $('[halign=' + cell.halign + ']').addClass('selected');
+        // console.log("cell with address", address, "was clicked");
     });
-    // *********************Formula******************************
+    // debouncing of scroll
+    function debounce(callback, wait, immediate = false) {
+        let timeout = null
+        return function () {
+            const callNow = immediate && !timeout
+            const next = () => callback.apply(this, arguments)
+
+            clearTimeout(timeout)
+            timeout = setTimeout(next, wait)
+
+            if (callNow) {
+                next()
+            }
+        }
+    }
+    function cb() {
+        let scrollX = $(elem).scrollLeft();
+        let scrollY = $(elem).scrollTop();;
+        $('#top-left-box, #top-row').css('top', scrollY + 'px');
+        $('#top-left-box, #left-col').css('left', scrollX + 'px');
+    }
+    $('#main').on('scroll', function () {
+        elem = this;
+        const handleScroll = debounce(cb, 100, true);
+
+        handleScroll(cb, 100, true);
+
+    })
+    //*********************Formula******************************
     $("#formula").on("blur", function () {
         let formulaElem = $(this);
         if (formulaElem.val() == "") {
@@ -39,10 +149,13 @@ $(document).ready(function () {
         let { rid, cid } = getRCidFromAddress(address);
         // update formula 
 
-        if (isFormulaValid(rid, cid, address, formula) == false) {
-            return;
-        }
-        if (db[rid][cid].formula && isFormulaValid(rid, cid, address, formula)) {
+        // if (isFormulaValid(rid, cid, address, formula) == false) {
+        //     return;
+        // }
+        // if (db[rid][cid].formula && isFormulaValid(rid, cid, address, formula)) {
+        //     deleteFormula(db[rid][cid].formula, rid, cid);
+        // }
+        if (db[rid][cid].formula ) {
             deleteFormula(db[rid][cid].formula, rid, cid);
         }
         // formula set
@@ -55,7 +168,6 @@ $(document).ready(function () {
         // UI update
         updateUI(value, rid, cid);
     })
-
     // update UI ->Update db 
     $(".grid .row .cell").on("blur", function () {
         // console.log("cell was clicked");
@@ -68,11 +180,10 @@ $(document).ready(function () {
             deleteFormula(db[rid][cid].formula, rid, cid);
         }
         let value = $(clickedCell).text();
-
         updateUI(value, rid, cid);
         // console.log("cell with address", address, "was blurred");
     });
-    // ***************helper functions******
+    // helper fns
     function setFormulaInDB(rid, cid, formula, address) {
         // set code
         db[rid][cid].formula = formula;
@@ -161,6 +272,7 @@ $(document).ready(function () {
     }
     function getRCidFromAddress(address) {
         // "B2"-> [1][1]
+        console.log("Address", address)
         let cid = Number(address.charCodeAt(0)) - 65;
         let rid = Number(address.slice(1)) - 1;
         return {
@@ -170,17 +282,12 @@ $(document).ready(function () {
 
 
     }
+    function getRCIDFromCell(clickedCell) {
+        let rid = $(clickedCell).attr("rid");
+        let cid = $(clickedCell).attr("cid");
+        return { rid: rid, cid: cid }
 
-
-
-
-
-
-
-
-
-
-
+    }
     // ***************New Open Save*****************
     $("#new").on("click", init);
     $("#save").on("click", function () {
@@ -205,12 +312,7 @@ $(document).ready(function () {
     })
     // events
     // initially work 
-    function getRCIDFromCell(clickedCell) {
-        let rid = $(clickedCell).attr("rid");
-        let cid = $(clickedCell).attr("cid");
-        return { rid: rid, cid: cid }
-
-    }
+    //helper functions 
     function init() {
         let Allrows = $(".grid .row");
         for (let i = 0; i < Allrows.length; i++) {
@@ -223,8 +325,27 @@ $(document).ready(function () {
                     isEmpty: true,
                     children: [],
                     parent: [],
+                    fontFamily: 'Arial',
+                    fontSize: 12,
+                    bold: false,
+                    underline: false,
+                    italic: false,
+                    bgColor: '#FFFFFF',
+                    textColor: '#000000',
+                    halign: 'left'
                 }
-                $(`.cell[rid=${i}][cid=${j}]`).text("");
+                let cell = $(`.cell[rid=${i}][cid=${j}]`)
+                cell.text("");
+                cell.css('font-family', cellObject.fontFamily);
+                cell.css("font-size", cellObject.fontSize + 'px');
+                cell.css("font-weight", cellObject.bold ? "bolder" : "normal");
+                cell.css("text-decoration", cellObject.underline ? "underline" : "none");
+                cell.css("font-style", cellObject.italic ? "italic" : "normal");
+                cell.css("background-color", cellObject.bgColor);
+                cell.css("color", cellObject.textColor);
+                cell.css("text-align", cellObject.halign);
+
+
                 colsArr.push(cellObject);
             }
             db.push(colsArr);
@@ -238,12 +359,18 @@ $(document).ready(function () {
             for (let j = 0; j < cols.length; j++) {
                 let val = db[i][j].val;
                 let isEmpty = db[i][j].isEmpty;
-                $(`.cell[rid=${i}][cid=${j}]`).text(isEmpty ? val : "");
+                let cell = $(`.cell[rid=${i}][cid=${j}]`)
+                cell.text(isEmpty ? val : "");
+                cell.css('font-family', cellObject.fontFamily);
+                cell.css("font-size", cellObject.fontSize + 'px');
+                cell.css("font-weight", cellObject.bold ? "bolder" : "normal");
+                cell.css("text-decoration", cellObject.underline ? "underline" : "none");
+                cell.css("font-style", cellObject.italic ? "italic" : "normal");
+                cell.css("background-color", cellObject.bgColor);
+                cell.css("color", cellObject.textColor);
+                cell.css("text-align", cellObject.halign);
 
             }
         }
     }
-
-
-
 })

@@ -156,16 +156,21 @@ position: relative;
     position:absolute;
     top: 0px;
     left: 1.5rem;
+    background-color: rgb(189, 213, 228);
+    z-index:2;
 }
 .top-left-box{
     position: absolute;
     height: 1.5rem;
     width:1.5rem;
     background-color: rgb(145, 172, 189);
+    z-index:3;
 }
 .top-left-col{
     position: absolute;
     top:1.5rem;
+    background-color: rgb(189, 213, 228);
+    z-index:2;
 }
 .top-left-col .cell{
 max-width:1.5rem;
@@ -178,4 +183,8 @@ font-size: 80%;
     position: absolute;
     top: 1.5rem;
     left: 1.5rem;
+}
+.selected{
+    color:white;
+    background-color: black;
 }
