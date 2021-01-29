@@ -5,52 +5,177 @@ margin:0px;
 padding:0px;
 /* ?? */
 box-sizing: border-box;
+font-family: sans-serif;
 }
 html{
     /* window size -> html size */
     height:100vh;
     /* border:2px solid green; */
 }
+/************************** menu css******************/
 .menu{
     /* border:1px solid red; */
-    background-color: lightblue;
+    /* background-color: lightblue; */
     height:60px;
+    display: flex;
+    align-items: center;
+    background-color:rgba(181, 214, 235, 0.687);
+
 }
+
+.file-options,.formatting,.alignment{
+   width:20%;
+   height:80%;
+   /* border:1px solid purple; */
+   border-right:1px solid gray;
+}
+.file-options{
+    flex:0.3;
+}
+.file-options{
+    display: flex;
+    align-items: center;
+    justify-content:flex-start;
+
+}
+.file-options>*
+{
+    width:30%;
+    text-align: center;
+    /* border:1px solid red; */
+}
+.file-options i{
+    font-size:larger;
+    margin-bottom:0.3rem;
+}
+.file-options .file-text{
+    font-size: smaller;
+    font-size: 60%;
+    font-weight: 600;
+}
+.formatting{
+    display: flex;
+    align-items:center;
+    justify-content: space-evenly;
+}
+.subgroup{
+    width:40%;
+    height: 100%;
+    display: flex;
+    flex-direction: column; 
+    justify-content: space-between;
+    /* border: 1px solid; */
+}
+.subgroup>*{
+    
+    /* border: 1px solid red; */
+    height: 45%;
+}
+.font-familyContainer select{
+    width:100%
+}
+.style-options{
+    /* border:1px solid purple; */
+    display: flex;
+    justify-content: space-around;
+}
+.style-options>*{
+    width:25%;
+    
+    
+}
+
+.font-size-container select{
+    width: 100%;
+}
+.color-container{
+    display:flex;
+    justify-content: space-around;
+}
+.font-size-container select{
+    width:90%;
+    margin-left:0.25rem;
+}
+.color-container >*{
+    width: 40%;
+    height: 100%;
+   }
+
+.alignment{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.alignment>*{
+width:20%;
+}
+/* *************************************Formula area starts here **************/
 .formula-bar{
-    background-color: lightcoral;
-    height:20px;
+    background-color:rgba(181, 214, 235, 0.687);
+
+    height:30px;
+    display: flex;
+    align-items: center; 
+    justify-content: space-around; 
+}
+.formula-bar input{
+    height:70%;   
+}   
+
+.address{
+    width:10%;
+}
+.formula-break{
+    max-width:3%;
+    min-height: 3%;
+}
+.formula{
+    width:83%;
+}
+.formula-bar .formula-break{
+    text-align: center;
 }
 /* main area  */
 .main{
-background-color: lightgreen;
-height: calc( 100vh - 80px );
+height: calc( 100vh - 90px );
 overflow: auto;
 position: relative;
 }
 .cell{
-    border:1px solid;
+    border:1px solid rgb(205, 217, 222);
 /* manually height */
    height: 1.5rem;
    /* width responsive */
-   min-width:4rem;
+   width:4rem;
    text-align: center;
 }
 .top-row{
     display:flex;
     /* justify-content: center; */
     /* align-items: center; */
-    position: absolute;
+    position:absolute;
     top: 0px;
-    left: 65px;
+    left: 1.5rem;
+}
+.top-left-box{
+    position: absolute;
+    height: 1.5rem;
+    width:1.5rem;
+    background-color: rgb(145, 172, 189);
 }
 .top-left-col{
-    width:10px;
+    position: absolute;
+    top:1.5rem;
+}
+.top-left-col .cell{
+max-width:1.5rem;
+font-size: 80%;
 }
 .row{
     display: flex;
 }
 .grid{    
     position: absolute;
-    top: 23px;
-    left: 64px;
+    top: 1.5rem;
+    left: 1.5rem;
 }

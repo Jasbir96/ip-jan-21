@@ -4,9 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css"
+        crossorigin="true">
     <link rel="stylesheet" href="style.css">
     <title>
-        <%=title%>
     </title>
 </head>
 
@@ -16,19 +17,68 @@
     <div class="menu">
         <div class="file-options">
             <!-- grid clean-->
-            <div id="new">NEW</div>
-            <div id="save">SAVE</div>
-            <div id="open">OPEN</div>
+            <div id="new">
+                <i class="fas fa-plus-square "></i>
+                <div class="file-text">NEW</div>
+
+            </div>
+            <div id="save">
+                <i class="far fa-save "></i>
+                <div class="file-text">SAVE</div>
+
+            </div>
+            <div id="open">
+                <i class="fas fa-envelope-open-text "></i>
+                <div class="file-text">OPEN</div>
+            </div>
         </div>
-        <div class="formatting">Format</div>
-        <div class="alignment">Alignment</div>
+        <div class="formatting">
+            <div class="subgroup">
+                <div class="font-familyContainer">
+                    <select id="font-family">
+                        <option value="Arial">Arial</option>
+                        <option value="Cambria">Cambria</option>
+                        <option value="Georgia">Georgia</option>
+                        <option value="monospace">Monospace</option>
+                        <option value="sans-serif">Sans-Serif</option>
+                        <option value="fantasy">Fantasy</option>
+                    </select>
+                </div>
+                <div class="style-options">
+                    <input id="bold" type="button" value="B">
+                    <input id="underline" type="button" value="U">
+                    <input id="italic" type="button" value="I">
+                </div>
+            </div>
+            <div class="subgroup">
+                <div class="font-size-container">
+                    <select id="font-size">
+                        <option value="8">8</option>
+                        <option value="10">10</option>
+                        <option value="12">12</option>
+                        <option value="14">14</option>
+                        <option value="16">16</option>
+                    </select>
+                </div>
+                <div class="color-container">
+                    <input id="bg-color" type="color" value="#FFFFFF">
+                    <input id="text-color" type="color" value="#000000">
+                </div>
+            </div>
+        </div>
+        <div class="alignment">
+            <input id="left" type="button" halign="left" value="L">
+            <input id="center" type="button" halign="center" value="C">
+            <input id="right" type="button" halign="right" value="R">
+        </div>
     </div>
     <div class="formula-bar">
-        <input type="text" id="address">
-        <input type="text" id="formula">
+        <input type="text" id="address" class="address">
+        <div class="formula-break">:</div>
+        <input type="text" id="formula" class="formula">
     </div>
     <div class="main">
-        <div class="top-left-box">top-left</div>
+        <div class="top-left-box"></div>
         <div class="top-row">
             <%for(let i=0;i<26;i++){%>
                 <div class="cell">
@@ -55,7 +105,6 @@
         </div>
     </div>
     <script src="render.js"></script>
-
 </body>
 
 </html>

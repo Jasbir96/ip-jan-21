@@ -6,29 +6,26 @@ const ejs = require("ejs-electron");
 ejs.data({
     title: "My Sheet 1"
 })
-
 function createWindow() {
     const win = new BrowserWindow({
         width: 800,
         height: 600,
-        webPreferences: { 
-            nodeIntegration: true ,
+        show: false,
+        webPreferences: {
+            nodeIntegration: true,
             enableRemoteModule: true
-        } 
+        }
     })
     win.loadFile('index.ejs').then(() => {
         win.webContents.openDevTools();
+        win.removeMenu();
+        win.show();
         win.maximize();
+      
     })
+   
 }
-
-
-
 app.whenReady().then(createWindow);
-
-
-
-
 // mac 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {

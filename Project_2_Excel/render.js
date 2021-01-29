@@ -37,11 +37,14 @@ $(document).ready(function () {
         let formula = $("#formula").val();
         let address = $("#address").val();
         let { rid, cid } = getRCidFromAddress(address);
+        // update formula 
 
-        if (db[rid][cid].formula) {
+        if (isFormulaValid(rid, cid, address, formula) == false) {
+            return;
+        }
+        if (db[rid][cid].formula && isFormulaValid(rid, cid, address, formula)) {
             deleteFormula(db[rid][cid].formula, rid, cid);
         }
-      
         // formula set
         // db update formula
         setFormulaInDB(rid, cid, formula, address);
